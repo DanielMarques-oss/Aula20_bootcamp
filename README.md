@@ -1,16 +1,3 @@
-# CRUD FASTAPI POSTGRES STREAMLIT
-
-Você sabe o que é CRUD?
-
-![Imagem CRUD](assets/crud.jpeg)
-
-A BlackFriday ta chegando. Você sabe como que o Iphone fica mais barato? Você sabe como que o vídeo game é cadastrado? Você sabia que quando abre o seu navegador, nada mais é do que o seu browser fazendo um SELECT no banco do Mercado Livre 🤯
-
-Você precisa conhecer o CRUD.
-
-O principal responsável por tornar isso possível é o ORM
-
-![Imagem ORM](assets/orm.png)
 
 ## Instalação via docker
 
@@ -162,17 +149,17 @@ Outra vantagem são os seus tipos pré-definidos, que facilitam muito a nossa vi
 
 Detalhe que criamos schemas diferentes para os retornos da nossa API. Isso é uma boa prática, pois permite que você tenha mais flexibilidade para alterar os schemas no futuro.
 
-Temos o schema `ProductBase`, que é o schema base para o cadastro de produtos. Esse schema é utilizado para fazer a validação dos dados que são recebidos na API, e também para definir os tipos de dados que são retornados pela API.
+Temos o schema `HeroBase`, que é o schema base para o cadastro de heróis. Esse schema é utilizado para fazer a validação dos dados que são recebidos na API, e também para definir os tipos de dados que são retornados pela API.
 
-Temos o schema `ProductCreate`, que é o schema que é retornado pela API. Ele é uma classe que herda do schema `ProductBase`, e possui um campo a mais, que é o id. Esse campo é utilizado para identificar o produto no banco de dados.
+Temos o schema `HeroCreate`, que é o schema que é retornado pela API. Ele é uma classe que herda do schema `HeroBase`, e possui um campo a mais, que é o id. Esse campo é utilizado para identificar o herói no banco de dados.
 
-Temos o schema `ProductResponse`, que é o schema que é retornado pela API. Ele é uma classe que herda do schema `ProductBase`, e possui dois campos a mais, que é o id e o created_at. Esses campos são gerados pelo nosso banco de dados.
+Temos o schema `HeroResponse`, que é o schema que é retornado pela API. Ele é uma classe que herda do schema `HeroBase`, e possui dois campos a mais, que é o id e o created_at. Esses campos são gerados pelo nosso banco de dados.
 
-Temos o schema `ProductUpdate`, que é o schema que é recebido pela API para update. Ele possui os campos opcionais, pois não é necessário enviar todos os campos para fazer o update.
+Temos o schema `HeroUpdate`, que é o schema que é recebido pela API para update. Ele possui os campos opcionais, pois não é necessário enviar todos os campos para fazer o update.
 
 ## Arquivo `crud.py`
 
-O arquivo `crud.py` é responsável por definir as funções de CRUD utilizando o SQLAlchemy ORM. Essas funções são utilizadas para fazer a comunicação com o banco de dados. É nele que definimos as funções de listagem, criação, atualização e remoção de produtos. É onde os dados são persistidos no banco de dados.
+O arquivo `crud.py` é responsável por definir as funções de CRUD utilizando o SQLAlchemy ORM. Essas funções são utilizadas para fazer a comunicação com o banco de dados. É nele que definimos as funções de listagem, criação, atualização e remoção de heróis. É onde os dados são persistidos no banco de dados.
 
 ## Arquivo `router.py`
 
@@ -181,18 +168,18 @@ O arquivo `router.py` é responsável por definir as rotas da API utilizando o F
 Os principais parametros são o path, que é o caminho da rota, o methods, que são os métodos HTTP que a rota aceita, e o response_model, que é o schema que é retornado pela rota.
 
 ```python
-@router.post("/products/", response_model=ProductResponse)
+@router.post("/heros/", response_model=HeroResponse)
 ```
-Importante destacar que o FastAPI utiliza o conceito de type hints, que são as anotações de tipos. Isso permite que o FastAPI faça a validação dos dados que são recebidos na API, e também para definir os tipos de dados que são retornados pela API. Por exemplo, ao definir o parâmetro product do tipo ProductResponse, o FastAPI já entende que os dados recebidos nesse parâmetro devem ser do tipo ProductResponse.
+Importante destacar que o FastAPI utiliza o conceito de type hints, que são as anotações de tipos. Isso permite que o FastAPI faça a validação dos dados que são recebidos na API, e também para definir os tipos de dados que são retornados pela API. Por exemplo, ao definir o parâmetro product do tipo HeroResponse, o FastAPI já entende que os dados recebidos nesse parâmetro devem ser do tipo HeroResponse.
 
-Conseguimos também retornar parâmetros pelo nosso path, no caso do delete, por exemplo, precisamos passar o id do produto que queremos deletar. Para isso, utilizamos o path /products/{product_id}, e definimos o parâmetro product_id na função delete_product.
+Conseguimos também retornar parâmetros pelo nosso path, no caso do delete, por exemplo, precisamos passar o id do heróis que queremos deletar. Para isso, utilizamos o path /heros/{product_id}, e definimos o parâmetro product_id na função delete_product.
 
 ```python
-@router.get("/products/{product_id}", response_model=ProductResponse)
+@router.get("/heros/{product_id}", response_model=HeroResponse)
 def read_product_route(product_id: int, db: Session = Depends(get_db)):
     db_product = get_product(db, product_id=product_id)
     if db_product is None:
-        raise HTTPException(status_code=404, detail="Product not found")
+        raise HTTPException(status_code=404, detail="Hero not found")
     return db_product
 ```
 
@@ -203,7 +190,7 @@ O arquivo `main.py` é responsável por definir a aplicação do FastAPI, e tamb
 
 ## Nosso Frontend
 
-Nosso frontend vai ser uma aplicação que vai consumir a nossa API, e vai ser responsável por fazer o cadastro, alteração e remoção de produtos. Vamos detalhar cada uma das pastas e arquivos do nosso frontend.
+Nosso frontend vai ser uma aplicação que vai consumir a nossa API, e vai ser responsável por fazer o cadastro, alteração e remoção de heróis. Vamos detalhar cada uma das pastas e arquivos do nosso frontend.
 
 ### Streamlit
 
@@ -217,48 +204,3 @@ O Requests é uma biblioteca para fazer requisições HTTP com Python. Ele é mu
 
 O Pandas é uma biblioteca para manipulação de dados com Python. Ele é muito utilizado para fazer análise de dados, e também para construir dashboards.
 
-
-
-## Deploy <> Em construção
-
-
-
-
-
-### AWS ECS
-
-Além disso, nesse projeto vamos apresentar como colocar em produção um projeto utilizando containers Docker, utilizando o AWS ECS (Amazon Elastic Container Service).
-
-Se você quer ter toda a facilidade do Docker, garantir que o seu ambiente de desenvolvimento e de produção são idênticos, e ainda ter a possibilidade de escalar a sua aplicação, esse projeto é para você.
-
-A AWS ECS é um serviço de orquestração de containers, que permite que você execute containers Docker de forma escalável e altamente disponível. Com ele, você não precisa se preocupar com a infraestrutura, pois a AWS cuida de tudo para você.
-
-### AMAZON ECS
-
-É um serviço de orquestração de containers, que permite que você execute containers Docker de forma escalável e altamente disponível. A vantagem principal é que você não precisa se preocupar com a orquestração dos containers (Kubernetes) mas tenha todas as vantagens de utilizar containers Docker.
-
-### AMAZON ECS FARGATE
-
-O ECS Fargate é um serviço que permite que você execute containers Docker sem precisar gerenciar servidores. Ou seja, todo o gerenciamento de servidores, balanceamento de carga, auto scaling, etc, é feito pela AWS. É um serviço ainda mais gerenciado que o ECS, pois você não precisa se preocupar com a infraestrutura.
-
-### Conceitos
-
-[Imagem arquitetura](assets/arquitetura.png)
-
-#### Cluster
-
-Um cluster é um grupo de instâncias EC2 (máquinas) que executam as suas tarefas. Ou seja, as máquinas onde os meus containers vão ser executados.
-
-#### Task Definition
-
-Uma task definition é um arquivo de configuração (com a formatação JSON) que define como a sua aplicação vai ser executada. Nesse arquivo você define qual imagem Docker vai ser utilizada, qual o poder computacional necessário, qual o volume que vai ser utilizado, etc.
-
-#### Task
-
-Uma task é uma instância de uma task definition. Ou seja, é uma execução da sua aplicação. Por exemplo, se você tem uma task definition que define que a sua aplicação vai ser executada com 2 instâncias, você terá 2 tasks executando a sua aplicação. Aplicado ao Airflow que vimos no Workshop 02, podemos subir mais de uma instância do Airflow, para garantir que a nossa aplicação vai estar sempre disponível. Além disso, podemos configurar para subir mais instâncias quando a CPU estiver alta, por exemplo.
-
-#### Service
-
-Um service é um grupo de tasks que são executadas juntas. Por exemplo, se você tem uma task definition que define que a sua aplicação vai ser executada com 2 instâncias, você terá 2 tasks executando a sua aplicação. Essas 2 tasks formam um service. Se alguma tarefa falhar, o service vai garantir que ela vai ser executada novamente. O service também pode ser utilizado para balancear a carga entre as tasks.
-
-# Aula20_bootcamp
